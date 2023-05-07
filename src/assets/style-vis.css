@@ -1,0 +1,286 @@
+/* -*- Mode: CSS; tab-width: 2; indent-tabs-mode: nil; -*- */
+/* vim:set ft=css ts=2 sw=2 sts=2 autoindent: */
+
+#svg {
+  margin: 34px auto 100px;
+  padding-top: 15px;
+} 
+svg {
+  width: 100%;
+  height: 1px;
+  border: 1px solid #7fa2ff;
+  font-size: 15px;
+  /* font-size: 14px; */
+}
+svg.reselect {
+  border: 1px solid #ff3333;
+}
+
+/* "basic" font */
+text {
+  font-size: 13px;
+  font-family: 'Liberation Sans', Verdana, Arial, Helvetica, sans-serif;
+}
+
+@-webkit-keyframes pulse {
+  0% { color: #9999ff; margin-top: 0; }
+  50% { color: #ffffff; margin-top: 7px; }
+  100% { color: #9999ff; margin-top: 0; }
+}
+
+path {
+  pointer-events: none;
+}
+
+/* "basic" font */
+.span text {
+  /*  font-size: 10.5px; */
+  font-size: 10px;
+  text-anchor: middle;
+  font-family: 'PT Sans Caption', sans-serif;
+  pointer-events: none;
+}
+
+/* this should likely match span font */
+.span_type_label {
+  font-size: 11px;
+  font-family: 'PT Sans Caption', sans-serif;
+}
+/* this should likely match arc font */
+.arc_type_label {
+  font-size: 11px;
+  font-family: 'PT Sans Caption', sans-serif;
+}
+text[data-arc-role] {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+} 
+
+.span rect {
+  stroke-width: 0.75;
+}
+
+.glyph {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+.attribute_warning {
+  stroke: red;
+}
+
+.span rect.False_positive {
+  stroke: #ff4141;
+  stroke-width: 2;
+}
+
+.shadow_True_positive {
+  fill: #00ff00;
+}
+
+.shadow_False_positive {
+  fill: #ff4141;
+} 
+
+.span rect.False_negative {
+  stroke: #c20000;
+  fill: #ffffff;
+  stroke-width: 2;
+}
+
+.shadow_False_negative {
+  fill: #c20000;
+} 
+.span rect.AnnotationError {
+  stroke-width: 1;
+}
+
+.shadow_AnnotationError {
+  fill: #ff0000;
+} 
+
+.span rect.AnnotationWarning {
+  stroke-width: 1;
+}
+
+.shadow_AnnotationWarning {
+  fill: #ff8800;
+} 
+
+.shadow_AnnotatorNotes {
+  /* fill: #00cc00; */
+  fill: #3ab7ee;
+}
+.shadow_Normalized {
+  /* fill: #00cc00; */
+  fill: #3aee37;
+} 
+rect.Normalized {
+  stroke-width: 1.5;
+}
+
+.shadow_AnnotationIncomplete {
+  fill: #aaaaaa;
+}
+.span rect.AnnotationIncomplete {
+  stroke: #002200;
+  stroke-width: 0.5;
+  fill: #ffffff;
+} 
+
+.shadow_AnnotationUnconfirmed {
+  fill: #eeeeee;
+}
+.span rect.AnnotationUnconfirmed {
+  stroke: #002200;
+  stroke-width: 0.5;
+  opacity : 0.5;
+}  
+
+rect.shadow_EditHighlight {
+  fill: #ffff99;
+}
+.shadow_EditHighlight_arc {
+  stroke: #ffff99;
+}
+
+.span path {
+  fill: none;
+}
+
+.span path.curly {
+  /* 'stroke' def here blocks 'stroke' set in JS..? */
+  /* stroke: grey; */
+  stroke-width: 0.5;
+}
+
+.span path.boxcross {
+  stroke: black;
+  opacity: 0.5;
+}
+
+.arcs path {
+  stroke: #989898;
+  fill: none;
+  stroke-width: 1;
+}
+
+.arcs .highlight path {
+  stroke: #000000;
+  stroke-width: 1.5;
+  opacity: 1;
+}
+.arcs .highlight text {
+  stroke: black;
+  fill: black;
+  stroke-width: 0.5;
+}
+.span.highlight rect {
+  stroke-width: 2px;
+}
+.span rect.reselect {
+  stroke-width: 2px;
+}
+.span rect.reselectTarget {
+  stroke-width: 2px;
+}
+.arcs .reselect path {
+  stroke-width: 2px;
+  stroke: #ff0000 !important;
+}
+.arcs .reselect text {
+  fill: #ff0000 !important;
+}
+
+.span rect.badTarget {
+  stroke: #f00;
+}
+
+.arcs text {
+  font-size: 9px;
+  text-anchor: middle;
+  font-family: 'PT Sans Caption', sans-serif;
+  /* dominant-baseline: central; */
+  cursor: default;
+}
+
+.background0 {
+  stroke: none;
+  fill: #ffffff;
+}
+
+.background1 {
+  stroke: none;
+  fill: #eeeeee;
+}
+
+.backgroundHighlight {
+  stroke: none;
+  fill: #ffff99;
+}
+
+.sentnum text {
+  fill: #999999;
+  text-anchor: end;
+}
+
+.sentnum path {
+  stroke: #999999;
+  stroke-width: 1px;
+}
+
+.span_cue {
+  fill: #eeeeee !important;
+}
+ 
+ 
+ 
+@font-face {
+  font-family: 'Liberation Sans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Liberation Sans'), local('Liberation-Sans'), url('fonts/Liberation_Sans-Regular.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'PT Sans Caption';
+  font-style: normal;
+  font-weight: normal;
+  src: local('PT Sans Caption'), local('PTSans-Caption'), url('fonts/PT_Sans-Caption-Web-Regular.ttf') format('truetype');
+}
+
+/* Apple iPad, iPhone, iPod */
+
+* {
+   -webkit-tap-highlight-color: rgba(0,0,0,0);
+   -webkit-text-size-adjust: none;
+   select: none;
+}
+
+.span rect.AddedAnnotation {
+  stroke: #ff4141;
+  stroke-width: 2;
+}
+.shadow_AddedAnnotation {
+  fill: #ff4141;
+} 
+.span rect.MissingAnnotation {
+  stroke: #ffffff;
+  stroke-width: 2;
+}
+.shadow_MissingAnnotation {
+  fill: #ff4141;
+  opacity: 0.3;
+} 
+.span rect.MissingAnnotation + text {
+  opacity: 0.5;
+}
+.span rect.ChangedAnnotation {
+  stroke: #ffff99;
+  stroke-width: 2;
+}
+.shadow_ChangedAnnotation {
+  fill: #ff4141;
+} 

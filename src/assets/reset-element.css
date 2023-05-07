@@ -1,0 +1,11 @@
+body, html, p, div, ul, li {
+    margin: 0;
+    padding: 0;
+}
+
+.el-dialog__header {
+    border-bottom: 1px solid #efefef;
+}
+.el-dialog__body {
+    padding: 20px;
+}
