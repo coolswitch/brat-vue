@@ -33,7 +33,7 @@
 
 <script lang="ts">
 import { Component, Vue, Prop, Watch } from "vue-property-decorator";
-import { GetTextParent } from '../brat-util.js';
+import { GetTextParent } from "../brat-util";
 
 type EntityObject = { id: string; type: string; txt: string };
 
@@ -55,131 +55,135 @@ export default class BratEntity extends Vue {
     return this.$store.state.brat.collectionObj.entity_types;
   }
 
-  title = 'Edit Annotation';
-  txt = '';
-  choosed = '';
-  offsets = [];
-  moving = null;
+  title = "Edit Annotation";
+  txt = "";
+  choosed = "";
+  offsets: any = [];
+  moving: any = null;
 
-  @Watch('value', { immediate: true })
+  @Watch("value", { immediate: true })
   valueChange(val: boolean) {
-        if (!val) return;
-        if (this.item) {
-          this.title = 'Edit Annotation';
-          this.choosed = this.item.type;
-        } else {
-          this.title = 'Add Annotation';
-          this.choosed = '';
-        }
-        this.computedOffsets();
-        this.computedTxt();
-        if (this.moving) this.Move();
+    if (!val) return;
+    if (this.item) {
+      this.title = "Edit Annotation";
+      this.choosed = this.item.type;
+    } else {
+      this.title = "Add Annotation";
+      this.choosed = "";
+    }
+    this.computedOffsets();
+    this.computedTxt();
+    if (this.moving) this.Move();
   }
 
+  Cancel() {
+    this.$emit("input", false);
+  }
 
-    Cancel() {
-      this.$emit('input', false);
+  Del() {
+    if (!this.choosed) return;
+    const loading = this.$loading({ lock: true });
+    const params = {
+      offsets: this.offsets,
+      type: this.choosed,
+      id: this.item.id
+    };
+    this.$store
+      .dispatch("brat/EntityDel", params)
+      .then(() => {
+        this.$Bus.$emit("rerender-svg");
+        this.Cancel();
+      })
+      .catch(err => this.$message({ message: err, type: "error" }))
+      .finally(() => loading.close());
+  }
+
+  Moving() {
+    this.moving = { id: this.item.id, type: this.choosed };
+    this.Cancel();
+  }
+
+  Move() {
+    this.Cancel();
+    this.choosed = this.moving.type;
+    this.Submit();
+  }
+
+  Submit() {
+    if (!this.choosed) return;
+
+    const loading = this.$loading({ lock: true });
+    const params = {
+      id: "",
+      offsets: this.offsets,
+      type: this.choosed
+    };
+    if (this.item) params.id = this.item.id;
+    if (this.moving) params.id = this.moving.id;
+    this.moving = null;
+
+    this.$store
+      .dispatch("brat/EntityCreateOrEdit", params)
+      .then(() => {
+        this.$Bus.$emit("rerender-svg");
+        this.Cancel();
+      })
+      .catch(err => this.$message({ message: err, type: "error" }))
+      .finally(() => loading.close());
+  }
+  /** 计算实体的文本 */
+  computedTxt() {
+    if (this.item) {
+      const from = this.offsets[0][0];
+      const to = this.offsets[this.offsets.length - 1][1];
+      this.txt = this.$store.state.brat.documentObj.text.substr(
+        from,
+        to - from
+      );
+    } else {
+      this.txt = window.getSelection()?.toString() || "";
     }
-
-    Del() {
-      if (!this.choosed) return;
-      const loading = this.$loading({ lock: true });
-      const params = {
-        offsets: this.offsets,
-        type: this.choosed,
-        id: this.item.id,
-      };
-      this.$store
-        .dispatch('brat/EntityDel', params)
-        .then(() => {
-          this.$Bus.$emit('rerender-svg');
-          this.Cancel();
-        })
-        .catch(err => this.$message({ message: err, type: 'error' }))
-        .finally(() => loading.close());
-    }
-
-    Moving() {
-      this.moving = { id: this.item.id, type: this.choosed };
-      this.Cancel();
-    },
-    Move() {
-      this.Cancel();
-      this.choosed = this.moving.type;
-      this.Submit();
-    },
-    Submit() {
-      if (!this.choosed) return;
-
-      const loading = this.$loading({ lock: true });
-      const params = {
-        offsets: this.offsets,
-        type: this.choosed,
-      };
-      if (this.item) params.id = this.item.id;
-      if (this.moving) params.id = this.moving.id;
-      this.moving = null;
-
-      this.$store
-        .dispatch('brat/EntityCreateOrEdit', params)
-        .then(() => {
-          this.$Bus.$emit('rerender-svg');
-          this.Cancel();
-        })
-        .catch(err => this.$message({ message: err, type: 'error' }))
-        .finally(() => loading.close());
-    }
-    /** 计算实体的文本 */
-    computedTxt() {
-      if (this.item) {
-        let from = this.offsets[0][0];
-        let to = this.offsets[this.offsets.length - 1][1];
-        this.txt = this.$store.state.brat.documentObj.text.substr(
-          from,
-          to - from,
-        );
-      } else {
-        this.txt = window.getSelection()?.toString() || '';
-      }
-    }
-    /** 计算选中的文本在整个文档中的位置 */
-    computedOffsets() {
-      if (this.item) {
-        this.$store.state.brat.documentObj.entities.find(entity => {
-          if (entity[0] === this.item.id) this.offsets = entity[2];
-        });
-        return;
-      }
-
-      const rangeObj = window.getSelection()?.getRangeAt(0);
-      if (!rangeObj) return
-      const eleStart = GetTextParent(rangeObj.startContainer);
-      const eleEnd = GetTextParent(rangeObj.endContainer);
-      let rangeEle: (HTMLElement | SVGTSpanElement)[] | HTMLElement  = rangeObj.commonAncestorContainer as HTMLElement;
-      if (eleStart === eleEnd) {
-        rangeEle = [eleStart as HTMLElement];
-      } else {
-        rangeEle = Array.from(rangeEle.querySelectorAll('tspan'));
-      }
-
-      const offsets: string[] = [];
-      const lines_offset = this.$store.state.brat.documentObj.sentence_offsets;
-
-      rangeEle.some(ele => {
-        let lineIndex = ele.getAttribute('data-chunk-id');
-        let [lineFrom] = lines_offset[lineIndex];
-        if (ele === eleStart) {
-          offsets.push(lineFrom + rangeObj.startOffset - 1);
-        }
-        if (ele === eleEnd) {
-          offsets.push(lineFrom + rangeObj.endOffset - 1);
-          return true;
-        }
-        return false;
+  }
+  /** 计算选中的文本在整个文档中的位置 */
+  computedOffsets() {
+    if (this.item) {
+      this.$store.state.brat.documentObj.entities.find(entity => {
+        if (entity[0] === this.item.id) this.offsets = entity[2];
       });
-      this.offsets = [offsets];
+      return;
     }
-};
+
+    const rangeObj = window.getSelection()?.getRangeAt(0);
+    if (!rangeObj) return;
+    const eleStart = GetTextParent(rangeObj.startContainer);
+    const eleEnd = GetTextParent(rangeObj.endContainer);
+    let rangeEle:
+      | (HTMLElement | SVGTSpanElement)[]
+      | HTMLElement = rangeObj.commonAncestorContainer as HTMLElement;
+    if (eleStart === eleEnd) {
+      rangeEle = [eleStart as HTMLElement];
+    } else {
+      rangeEle = Array.from(rangeEle.querySelectorAll("tspan"));
+    }
+
+    const offsets: (string | number)[] = [];
+    const lines_offset = this.$store.state.brat.documentObj.sentence_offsets;
+
+    rangeEle.some(ele => {
+      const lineIndex = ele.getAttribute("data-chunk-id");
+      const [lineFrom] = lines_offset[lineIndex as string];
+      if (ele === eleStart) {
+        offsets.push(lineFrom + rangeObj.startOffset - 1);
+      }
+      if (ele === eleEnd) {
+        offsets.push(lineFrom + rangeObj.endOffset - 1);
+        return true;
+      }
+      return false;
+    });
+    this.offsets = [offsets];
+  }
+}
 </script>
 
 <style scoped>

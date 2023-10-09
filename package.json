@@ -50,7 +50,14 @@
     "parserOptions": {
       "ecmaVersion": 2020
     },
-    "rules": {}
+    "rules": {
+      "@typescript-eslint/no-use-before-define": 0,
+      "@typescript-eslint/ban-ts-comment": 0,
+      "@typescript-eslint/ban-ts-ignore": 0,
+      "@typescript-eslint/camelcase": 0,
+      "prefer-const": "warn",
+      "semi": "off"
+    }
   },
   "browserslist": [
     "> 1%",

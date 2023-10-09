@@ -51,13 +51,15 @@ function DrawLineName(name, offset: PosType) {
 
 /** 根据关系的两个节点id，计算线的d */
 export function GetEntitiesLineD(originId, targetId, relation) {
-  const svgTop = document.querySelector("svg").getBoundingClientRect().top;
-  let from = document.querySelector(`[data-span-id="${originId}"]`);
-  let to = document.querySelector(`[data-span-id="${targetId}"]`);
+  const svgTop =
+    document.querySelector("svg")?.getBoundingClientRect().top || 0;
+  let from: any = document.querySelector(`[data-span-id="${originId}"]`);
+  let to: any = document.querySelector(`[data-span-id="${targetId}"]`);
 
   to = to.getBoundingClientRect();
   from = from.getBoundingClientRect();
-  const svgOffsetLeft = document.querySelector(`#svg`).offsetLeft;
+  // @ts-ignore
+  const svgOffsetLeft = document.querySelector(`#svg`)?.offsetLeft;
 
   if (to.top === from.top) {
     const rightOne = to.left > from.left ? to : from;
@@ -88,7 +90,7 @@ export function GetEntitiesLineD(originId, targetId, relation) {
     direction += topOne === to ? "top" : "bottom";
     return {
       ...DrawLineName(relation, offset),
-      d: DrawLine(direction, offset)
+      d: DrawLine(direction as DirectionType, offset)
     };
   }
 }
@@ -106,7 +108,7 @@ export function GetLineD(from, to) {
   };
   let direction = leftOne === to ? "goleft" : "goright";
   direction += topOne === to ? "top" : "bottom";
-  return DrawLine(direction, offset);
+  return DrawLine(direction as DirectionType, offset);
 }
 
 /** 处理位置重叠的实体们
@@ -114,7 +116,7 @@ export function GetLineD(from, to) {
  */
 export function HandlerOverlapEntities(entities) {
   let overlapNum = 1;
-  let overlap = [];
+  let overlap: any[] = [];
   const compare = (prev, current) => {
     if (prev.x + prev.width > current.x) {
       current.y += 16;
@@ -137,6 +139,7 @@ export function HandlerOverlapEntities(entities) {
 /** 根据文本创建svg，得到大小 */
 export function CreateSvgTextGetSize(str, fontSize) {
   const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  // @ts-ignore
   svg.version = "1.1";
   document.body.append(svg);
 
@@ -203,6 +206,7 @@ export function Array2ObjDeep(arr, mainkey) {
 
 /** 操作颜色 */
 export class BratColor {
+  color: string;
   constructor(color) {
     this.color = color;
   }
@@ -299,7 +303,7 @@ export function formatTimeAgo(time) {
   if (diff < 28) return unitAgo(Math.floor(diff / 7), "week");
   const thenDate = new Date(time);
   let result = thenDate.getDate() + " " + monthNames[thenDate.getMonth()];
-  if (thenDate.getYear() != nowDate.getYear()) {
+  if (thenDate.getFullYear() != nowDate.getFullYear()) {
     result += " " + thenDate.getFullYear();
   }
   return result;

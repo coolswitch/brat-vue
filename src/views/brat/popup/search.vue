@@ -94,13 +94,13 @@ import { CreateRangeDOMRect } from "../brat-util";
 @Component
 export default class BratSearch extends Vue {
   @Prop({ type: Boolean, default: false })
-  private value!: boolean;
+  value!: boolean;
 
   get types_entity() {
-    return this.$store.getters.brat.types_entity;
+    return this.$store.getters["brat/types_entity"];
   }
   get types_relation() {
-    return this.$store.getters.brat.types_relation;
+    return this.$store.getters["brat/types_relation"];
   }
   // get relation_types() {
   //   if (!this.origin.type || !this.target.type) return [];

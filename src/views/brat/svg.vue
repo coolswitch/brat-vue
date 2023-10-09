@@ -218,8 +218,8 @@ import {
   BratColor,
   GetEntitiesLineD,
   GetLineD,
-  HandlerOverlapEntities,
-} from "./brat-util.js";
+  HandlerOverlapEntities
+} from "./brat-util";
 
 const constSize = {};
 /** 行号宽 */
@@ -256,7 +256,7 @@ export default {
       isShowRelation: false,
       editingItem: null,
       dragingIds: [],
-      dragingD: "",
+      dragingD: ""
     };
   },
   computed: {
@@ -264,7 +264,7 @@ export default {
     ...mapGetters("brat", [
       "types_entity",
       "types_unconfigured",
-      "types_relation",
+      "types_relation"
     ]),
 
     documentPath() {
@@ -285,9 +285,9 @@ export default {
       const origin = this.$store.state.brat.documentObj.entities;
       // ['T1', 'xxx', [[2-9]]] => [{ from, to, id, type }...]
       const sorted = [];
-      (origin || []).forEach((entity) => {
+      (origin || []).forEach(entity => {
         const [id, type] = entity;
-        entity[2].forEach((pos) => {
+        entity[2].forEach(pos => {
           sorted.push({ from: pos[0], to: pos[1], id, type });
         });
       });
@@ -297,7 +297,7 @@ export default {
     },
     searchResult() {
       return this.$store.state.brat.searchResult;
-    },
+    }
   },
   watch: {
     documentPath: {
@@ -305,8 +305,8 @@ export default {
       handler(val) {
         if (val) this.$nextTick(() => this.ComputedRows());
         this.rows = [];
-      },
-    },
+      }
+    }
   },
   methods: {
     /** 得到每行数据
@@ -400,7 +400,7 @@ export default {
           originId: source[1],
           targetId: target[1],
           conf: this.types_relation[type],
-          ...line,
+          ...line
         });
       });
       this.relations = newarr;
@@ -409,13 +409,13 @@ export default {
     HoverIn(originId, targetId) {
       if (targetId) {
         this.hoverIds = [originId, targetId];
-        this.relations.forEach((item) => {
+        this.relations.forEach(item => {
           if (item.originId === targetId) this.hoverIds.push(item.targetId);
           if (item.targetId === originId) this.hoverIds.push(item.originId);
         });
       } else {
         this.hoverIds = [originId];
-        this.relations.forEach((item) => {
+        this.relations.forEach(item => {
           if (item.originId === originId) this.hoverIds.push(item.targetId);
           if (item.targetId === originId) this.hoverIds.push(item.originId);
         });
@@ -443,7 +443,7 @@ export default {
       if (this.dragingIds.length === 1) {
         this.dragingD = GetLineD(this.dragingIds[0], {
           x: e.offsetX,
-          y: e.offsetY,
+          y: e.offsetY
         });
       }
     },
@@ -484,14 +484,14 @@ export default {
 
     ReRender() {
       this.$nextTick(() => this.ComputedRows());
-    },
+    }
   },
   created() {
     this.$Bus.$on("rerender-svg", this.ReRender);
   },
   beforeDestroy() {
     this.$Bus.$off("rerender-svg", this.ReRender);
-  },
+  }
 };
 </script>
 
